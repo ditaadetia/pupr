@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateAlbertsTable extends Migration
+class CreateEquipmentsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateAlbertsTable extends Migration
      */
     public function up()
     {
-        Schema::create('alberts', function (Blueprint $table) {
+        Schema::create('equipments', function (Blueprint $table) {
             $table->id();
             $table->string('nama');
             $table->string('foto')->nullable;
@@ -23,6 +23,7 @@ class CreateAlbertsTable extends Migration
             $table->integer('harga_sewa_perhari');
             $table->string('keterangan')->nullable;
             $table->string('kondisi')->nullable;
+            $table->timestamps();
         });
     }
 
@@ -33,6 +34,6 @@ class CreateAlbertsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('alberts');
+        Schema::dropIfExists('equipments');
     }
 }

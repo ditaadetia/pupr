@@ -6,7 +6,7 @@
     <div class="col">
       <div class="card shadow" style="border-radius:50px !important;">
         <div class="card-header border-0">
-            <a href="tambah_alat" class="btn btn-primary btn-icon">
+            <a href="{{ route('equipments.create') }}" class="btn btn-primary btn-icon">
                 <i class="ni ni-fat-add"></i>
                 <span class="nav-link-text">Tambah Alat Berat</span>
             </a>
@@ -42,35 +42,34 @@
             </thead>
             <tbody class="list">
               <?php $no = 0 ?>
-              @foreach ($alberts as $albert)
-                <?php $no++ ?>
+              @foreach ($equipments as $equipment)
                 <tr style="text-align:center !important;">
                   <td class="no">
-                      {{ $no }}
+                      {{ $loop->index }}
                   </td>
                   <td>
-                    {{ $albert->nama }}
+                    {{ $equipment->nama }}
                   </td>
                   <td>
-                      <img src="{{ asset('storage/' . $albert->foto) }}" width="200%;">
+                      <img src="{{ asset('storage/' . $equipment->foto) }}" width="200%;">
                   </td>
                   <td>
-                    {{ $albert->jenis }}
+                    {{ $equipment->jenis }}
                   </td>
                   <td>
-                    {{ $albert->kegunaan }}
+                    {{ $equipment->kegunaan }}
                   </td>
                   <td>
-                    {{ $albert->harga_sewa_perjam }}
+                    {{ $equipment->harga_sewa_perjam }}
                   </td>
                   <td>
-                    {{ $albert->harga_sewa_perhari }}
+                    {{ $equipment->harga_sewa_perhari }}
                   </td>
                   <td>
-                    {{ $albert->keterangan }}
+                    {{ $equipment->keterangan }}
                   </td>
                   <td>
-                    {{ $albert->kondisi }}
+                    {{ $equipment->kondisi }}
                   </td>
                   <td class="text-right">
                     <div class="dropdown">
@@ -78,8 +77,8 @@
                         <i class="fas fa-ellipsis-v"></i>
                       </a>
                       <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
-                        <a class="dropdown-item" href="edit_alat">Edit Alat</a>
-                        <a class="dropdown-item" href="hapus_alat">Hapus Alat</a>
+                        <a class="dropdown-item" href="{{ route('equipments.edit', ['equipment' => $equipment->id]) }}">Edit Alat</a>
+                        <a class="dropdown-item" href="{{ route('equipments.destroy', ['equipment' => $equipment->id]) }}">Hapus Alat</a>
                       </div>
                     </div>
                   </td>

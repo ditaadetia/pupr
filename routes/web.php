@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\AlbertController;
+use App\Http\Controllers\EquipmentController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -22,12 +22,27 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 });
 
-Route::get('/alat_berat', [AlbertController::class, 'index']);
+/** Dita's original routes */
+// Route::get('/alat_berat', [EquipmentController::class, 'index']);
 
-Route::post('/tambah_alat/post', [AlbertController::class, 'store']);
+// Route::post('/tambah_alat/post', [EquipmentController::class, 'store']);
 
-Route::get('/tambah_alat', [AlbertController::class, 'create']);
+// Route::get('/tambah_alat', [EquipmentController::class, 'create']);
 
-Route::get('/edit_alat', [AlbertController::class, 'edit']);
+// Route::get('/edit_alat', [EquipmentController::class, 'edit']);
 
-Route::post('/edit_alat/edit', [AlbertController::class, 'update']);
+// Route::post('/edit_alat/edit', [EquipmentController::class, 'update']);
+
+/** Dave's improved routes */
+
+// Route::name('equipments.')->group(function () {
+//     Route::get('equipments', [EquipmentController::class, 'index'])->name('index');
+//     Route::get('equipments/create', [EquipmentController::class, 'create'])->name('create');
+//     Route::post('equipments', [EquipmentController::class, 'store'])->name('store');
+//     Route::get('equipments/{equipment}', [EquipmentController::class, 'show'])->name('show');
+//     Route::get('equipments/{equipment}/edit', [EquipmentController::class, 'edit'])->name('edit');
+//     Route::put('equipments/{equipment}', [EquipmentController::class, 'update'])->name('update');
+//     Route::delete('equipments/{equipment}', [EquipmentController::class, 'destroy'])->name('destroy');
+// });
+
+Route::resource('equipments', EquipmentController::class);
