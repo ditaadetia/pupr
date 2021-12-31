@@ -1,3 +1,4 @@
+<?php use Carbon\Carbon; ?>
 <!DOCTYPE html>
 <html>
     <head>
@@ -56,7 +57,7 @@
     {{-- <script>window.open('#', '_blank');</script> --}}
     <div class="container"  style="border: 10px double rgb(49, 48, 48); border-radius:80px; padding: 30px 60px 30px 60px">
         <center>
-            <img src="img/Logo-Kota-Pontianak-Hitam.png" alt="" style="width:140px; height:130px;">
+            <img src="img/Logo-Kota-Pontianak-Hitam.jpg" alt="" style="width:140px; height:130px;">
             <h2><b>PEMERINTAH KOTA PONTIANAK</b>&nbsp; <b>DINAS PEKERJAAN UMUM DAN PENATAAN RUANG</b></h2>
             <div class="line" style="border-bottom: 3px double;"></div>
             <br>
@@ -65,21 +66,28 @@
             <h5><b>Alamat Jalan Achmad Yani Pontianak 78121 Telp. (0561)732300 Fax. (0561) 747329</b></h5>
             <h2 style="text-decoration: underline; margin-top:40px;"><b>DRAF SURAT PERJANJIAN PENYEWAAN PERALATAN</b></h2>
             <h3>Nomor : <b style="color: slategray">{{ $order->id }}/SPPP/D.PUPR-UPT/2021</b></h3>
-            <h3>Tanggal: <b style="color: slategray">{{ $order->created_at->format('d F Y') }}</b></h3>
+            <h3>Tanggal: <b style="color: slategray">{{ Carbon::now()->isoFormat('D MMMM YYYY') }}</b></h3>
             <h3><b>ANTARA :</b></h3>
             <h2><b>DINAS PEKERJAAN UMUM DAN PENATAAN RUANG</b></h2>
             <h3><b>DENGAN :</b></h3>
-            <h2>CV. <b style="color: slategray">{{ $detail->nama_instansi }}</b></h2>
+            <h2>CV. <b style="color: slategray">{{ $order->nama_instansi }}</b></h2>
             <h3><b>PEKERJAAN :</b></h3>
             <h2>Jalan <b style="color: slategray">{{ $order->nama_kegiatan }}</b></h2>
             <h2>NILAI SEWA / KONTRAK ALAT BERAT</h2>
-            <?php $total = 0 ?>
+            <?php $no =0; $total = 0 ?>
+            <?php
+                $tanggal_mulai = new DateTime($order->tanggal_mulai);
+                $tanggal_selesai = new DateTime($order->tanggal_selesai);
+                $total_waktu = $tanggal_selesai->diff($tanggal_mulai);
+            ?>
             @foreach ($detail_orders as $detail_order)
+                <?php $no++ ?>
                 <?php
-                    $harga_hari = $detail_order->jumlah_hari_sewa * $detail_order->harga_sewa_perhari;
-                    $harga_jam = $detail_order->jumlah_jam_sewa * $detail_order->harga_sewa_perjam;
+                    $harga_hari = $total_waktu->days * $detail_order->harga_sewa_perhari;
+                    $harga_jam = $total_waktu->h * $detail_order->harga_sewa_perjam;
                     $jumlah = $harga_hari + $harga_jam;
                     $total = $total + $jumlah;
+
                 ?>
             @endforeach
             <textarea><h2><b>{{ 'Rp. ' . number_format($total, 2, ",", ".") }}</b></h2></textarea>
@@ -88,7 +96,7 @@
     <div class="page2" style="padding-left: 30px; text-align:justify;">
         <div class="row">
             <div class="header">
-                <img src="img/Logo-Kota-Pontianak.png" alt="" style="width:100px; height:90px;">
+                <img src="img/Logo-Kota-Pontianak.jpg" alt="" style="width:100px; height:90px;">
                 <h5 class="judul text-center">PEMERINTAH KOTA PONTIANAK<br><b><span class="font24">DINAS PEKERJAAN UMUM DAN PENATAAN RUANG</span></b><br><small>Alamat Jalan A. Yani Telpon : +62561-732300 Fax : +62561-747329</small><br><span class="font12"><b>PONTIANAK - KALBAR</b><span></h5>
             </div>
         </div>
@@ -97,12 +105,11 @@
                 <h3><b>SURAT PERJANJIAN PENYEWAAN PERALATAN</b></h3>
             </div>
             <p>Nomor : <b style="color: slategray">{{ $order->id }}/SPPP/D.PUPR-UPT/2021</b></p>
-            <p style="margin-top:-10px">Tanggal: <b style="color: slategray">{{ $order->created_at->format('d F Y') }}</b></p>
+            <p style="margin-top:-10px">Tanggal: <b style="color: slategray">{{ Carbon::now()->isoFormat('D MMMM YYYY') }}</b></p>
             <h4><b>T E N T A N G</b></h4>
             <h3><b>PENYEWAAN</b></h3>
         </center>
-        <?php use Carbon\Carbon; ?>
-        <p>Pada hari ini, <b>{{ Carbon::now()->format('l') }}</b> Tanggal <b>{{ Carbon::now()->format('d') }}</b> Bulan <b>{{ Carbon::now()->format('F') }}</b> Tahun <b>{{ Carbon::now()->format('Y') }}</b>, kami yang bertanda tangan dibawah ini :</p>
+        <p>Pada hari ini, <b>{{ Carbon::now()->locale('id')->isoFormat('dddd') }},</b> Tanggal <b>{{ Carbon::now()->format('d') }}</b> Bulan <b>{{ Carbon::now()->isoFormat('MMMM') }}</b> Tahun <b>{{ Carbon::now()->format('Y') }}</b>, kami yang bertanda tangan dibawah ini :</p>
         &nbsp;
         <ol>
             <li>
@@ -113,17 +120,17 @@
             <p>Yang dalam hal ini bertindak dan atas nama Pemerintah Kota Pontianak (Dinas Pekerjaan Umum Dan Penataan Ruang Kota Pontianak ), selanjutnya dalam perjanjian ini disebut <b>PIHAK PERTAMA</b><p>
             <br>
             <li>
-                <p style="margin-top: -1px">Nama &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&nbsp; : <b>{{ $detail->nama }} </b></p>
-                <p>Nama Bidang Hukum &nbsp; &nbsp; &nbsp; &nbsp;: {{ $detail->nama_bidang_hukum }} </p>
+                <p style="margin-top: -1px">Nama &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&nbsp; : <b>{{ $order1->nama }} </b></p>
+                <p>Nama Bidang Hukum &nbsp; &nbsp; &nbsp; &nbsp;: {{ $order->nama_instansi }} </p>
                 <p>Alamat &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; : Jl. A. Yani Telp (0561) 732300 Pontianak. <br>
             </li>
-            <p>Yang didirikan dengan Akte Notaris : <br>Dalam hal ini bertindak atas nama Direktur CV. {{ $detail->nama_instansi }} yang selanjutnya dalam perjanjian ini disebut sebagai <b>PIHAK KEDUA.</b></p>
+            <p>Yang didirikan dengan Akte Notaris : <br>Dalam hal ini bertindak atas nama Direktur CV. {{ $order->nama_instansi }} yang selanjutnya dalam perjanjian ini disebut sebagai <b>PIHAK KEDUA.</b></p>
         </ol>
         <br>
         <p>Kedua belah pihak telah sepakat untuk melaksanakan ikatan perjanjian dengan berdasarkan : </p>
         &nbsp;<ol>
             <li>
-                <p style="margin-top: -1px">Surat Permohonan CV. {{ $detail->nama_instansi }} Nomor. / CV-TG / V/ 2021 Tanggal {{ $order->created_at->format('d F Y') }} perihal Permohonan Pinjam Pakai Alat Berat (Sewa menyewa).</p>
+                <p style="margin-top: -1px">Surat Permohonan CV. {{ $order->nama_instansi }} Nomor. / CV-TG / V/ 2021 Tanggal {{ $order->created_at->format('d F Y') }} perihal Permohonan Pinjam Pakai Alat Berat (Sewa menyewa).</p>
             </li>
             <li>
                 <p style="margin-top: -1px">Surat Kepala Dinas Pekerjaan Umum dan Penataan Ruang Kota Pontianak No. / / D-PUPR.UPT Tanggal Perihal Persetujuan Pinjam Pakai Alat Berat (Sewa menyewa)</p>
@@ -159,8 +166,8 @@
                 </thead>
                 <?php $no =0; $total = 0 ?>
                 <?php
-                    $tanggal_mulai = new DateTime($detail->tanggal_mulai);
-                    $tanggal_selesai = new DateTime($detail->tanggal_selesai);
+                    $tanggal_mulai = new DateTime($order->tanggal_mulai);
+                    $tanggal_selesai = new DateTime($order->tanggal_selesai);
                     $total_waktu = $tanggal_selesai->diff($tanggal_mulai);
                 ?>
                 @foreach ($detail_orders as $detail_order)
@@ -246,7 +253,7 @@
                     <p style="margin-top: -1px">Keputusan Walikota Pontianak Nomor 11 Tahun 2011 tentang Pejabat yang ditunjuk sebagai Bendahara Penerima, Bendahara Pengeluaran SKPD dan SKPKD serta Atasan Langsung dilingkungan Pemerintah Kota Pontianak Tahun Anggaran 2011;</p>
                 </li>
                 <li>
-                    <p style="margin-top: -1px">Surat Permohonan CV. {{ $detail->nama_instansi }} Nomor  / CV_TG / V / 2021 tanggal perihal Permohonan Pinjam Pakai Alat Berat (Sewa Menyewa)</p>
+                    <p style="margin-top: -1px">Surat Permohonan CV. {{ $order->nama_instansi }} Nomor  / CV_TG / V / 2021 tanggal perihal Permohonan Pinjam Pakai Alat Berat (Sewa Menyewa)</p>
                 </li>
                 <li>
                     <p style="margin-top: -1px">Surat Kepala Dinas Pekerjaan Umum dan Penataan Ruang Kota Pontianak No. / / D-PUPR.UPT Tanggal . Perihal Persetujuan Pinjam Pakai Alat Berat (Sewa Menyewa).</p>
@@ -411,13 +418,13 @@
             <br>
             <div class="ttd-atas" style="margin-left:8%; margin-right:8%;">
                 <div class="penyewa" style="float: left">
-                    <p style="text-decoration: underline"><b>PIHAK KEDUA</b><br><p style="margin-top: -12px">CV. {{ $detail->nama_instansi }}</p></p>
+                    <p style="text-decoration: underline"><b>PIHAK KEDUA</b><br><p style="margin-top: -12px">CV. {{ $order->nama_instansi }}</p></p>
                         <br><br><br><br><br>
-                    <p style="text-decoration: underline"><b>{{ $detail->nama }}</b><br><p style="margin-top: -12px">Direktur</p></p>
+                    <p style="text-decoration: underline"><b>{{ $order1->nama }}</b><br><p style="margin-top: -12px">Direktur</p></p>
                 </div>
                 <div class="kepala-uptd" style="float: right">
                     <p style="text-decoration: underline" align="center"><b>PIHAK PERTAMA</b><br><p align="center" style="margin-top: -12px">KEPALA UPT ALAT BERAT <br> DINAS PEKERJAAN UMUM DAN PENATAAN <br> RUANG KOTA PONTIANAK</p></p>
-                    @if($detail->ket_persetujuan_kepala_uptd == 'belum' OR $detail->ket_persetujuan_kepala_uptd == 'tolak' OR $detail->ttd_kepala_uptd =='')
+                    {{-- @if($order1->ket_persetujuan_kepala_uptd == 'belum' OR $order1->ket_persetujuan_kepala_uptd == 'tolak' OR $order1->ttd_kepala_uptd =='')
                         <br><br><br>
                     @else
                         <center>
@@ -425,7 +432,7 @@
                             $pdf=$path . '/' . $detail->ttd_kepala_uptd;?>
                             <img src="{{ $pdf }}" alt="" style="width:60px; height:60px;">
                         </center>
-                    @endif
+                    @endif --}}
                     <p style="text-decoration: underline" align="center"><b>{{ $kepala_uptd->name }}</b><br><p align="center" style="margin-top: -12px">{{ $kepala_uptd->pangkat }}</p><p style="margin-top: -12px" align="center">NIP. {{ $kepala_uptd->nip }}</p></p>
                 </div>
             </div>
@@ -434,7 +441,7 @@
                 <center>
                     <div class="kepala-dinas">
                         <p>Mengetahui : </p><p style="text-decoration: underline; margin-top:-12px"><b>KEPALA DINAS PEKERJAAN UMUM DAN PENATAAN RUANG KOTA PONTIANAK</b></p>
-                        @if($detail->ket_persetujuan_kepala_dinas == 'belum' OR $detail->ket_persetujuan_kepala_dinas == 'tolak' OR $detail->ttd_kepala_dinas =='')
+                        {{-- @if($detail->ket_persetujuan_kepala_dinas == 'belum' OR $detail->ket_persetujuan_kepala_dinas == 'tolak' OR $detail->ttd_kepala_dinas =='')
                             <br><br><br>
                         @else
                             <center>
@@ -442,7 +449,7 @@
                                 $pdf=$path . '/' . $detail->ttd_kepala_dinas;?>
                                 <img src="{{ $pdf }}" alt="" style="width:60px; height:60px;">
                             </center>
-                        @endif
+                        @endif --}}
                         <p style="text-decoration: underline"><b style="margin-top: -12px">{{ $kepala_dinas->name }}</b><br><p style="margin-top: -12px">{{ $kepala_dinas->pangkat }}</p><p style="margin-top: -12px">{{ $kepala_dinas->nip }}</p></p>
                     </div>
                 </center>
@@ -451,10 +458,10 @@
     </div>
     <div class="page4" style="padding:40px">
         <div class="header">
-            <img src="img/Logo-Kota-Pontianak.png" alt="" style="width:100px; height:90px;">
+            <img src="img/Logo-Kota-Pontianak.jpg" alt="" style="width:100px; height:90px;">
             <h5 class="judul text-center">PEMERINTAH KOTA PONTIANAK<br><b><span class="font24">DINAS PEKERJAAN UMUM DAN PENATAAN RUANG</span></b><br><small>Alamat Jalan A. Yani Telpon : +62561-732300 Fax : +62561-747329</small><br><span class="font12"><b>PONTIANAK - KALBAR</b><span></h5>
         </div>
-        <p class="p" style="text-align: right">Pontianak, {{ Carbon::now()->isoFormat('d MMMM YYYY') }}</p>
+        <p class="p" style="text-align: right">Pontianak, {{ Carbon::now()->isoFormat('D MMMM YYYY') }}</p>
         <div class="col-4" style="float: right">
             <p class="p" style="text-align: center;">Kepada</p>
             <p class="p">Yth, <b style="font-style: italic; font-weight:bold">Direktur CV. {{ $order1->nama_instansi }}</b></p>
